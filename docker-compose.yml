@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  file-init:
+    image: busybox
+    container_name: file-init
+    command: >
+      sh -c "
+      mkdir -p /mediamtx &&
+      cp /config/mediamtx.yml /mediamtx/ &&
+      echo 'mediamtx.yml copied successfully'"
+    volumes:
+      - app-data:/data
+      - ./mediamtx.yml:/config/mediamtx.yml:ro
+    network_mode: host
+    depends_on:
+      - frontend
+      - backend
+
+  frontend:
+    build:
+      context: ./Frontend
+    container_name: frontend
+    env_file:
+      - .env_frontend
+    volumes:
+      - app-data:/data
+    network_mode: host
+
+  backend:
+    build:
+      context: ./Backend
+    container_name: backend
+    env_file:
+      - .env_backend
+    volumes:
+      - app-data:/data
+    network_mode: host
+
+  mediamtx:
+    image: bluenviron/mediamtx
+    container_name: mediamtx
+    depends_on:
+      - file-init
+    volumes:
+      - app-data:/data
+    network_mode: host
+
+volumes:
+  app-data:
+    driver: local
