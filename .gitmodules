@@ -1,0 +1,8 @@
+[submodule "Frontend"]
+	path = Frontend
+	url = https://github.com/StageStream/Frontend
+	branch = main
+[submodule "Backend"]
+	path = Backend
+	url = https://github.com/StageStream/Backend
+	branch = main
